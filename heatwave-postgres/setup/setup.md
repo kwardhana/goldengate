@@ -168,6 +168,19 @@ In this section, you will provision a VCN and subnet, MySQL and OCI PostgreSQL i
 
 	![Click the three dots and then select Copy SSH command](./images/03-18-copy-ssh-cmd.png " ")
 
+19. Copy the SSH command into a text editor, then make the following changes:
+
+	* Replace the placeholder for the key file with the full path to the SSH key you created or downloaded in step 16.
+	* Replace the placeholder for the port with a local port number of your choice. You can use any available port.
+
+20. On Mac or Linux, open a terminal window and run the command above. On Windows, use PowerShell to run the command above. If you're prompted to confirm the connection, type **yes**, and then press **Enter**.
+
+21. Open your database client (i.e. MySQL Workbench) and configure the connection. Verify the following binary log startup options and system variables are correctly configured on Heatwave MysQL, as required by Oracle GoldenGate for MySQL. 
+
+22. Verify that the following binary log startup options and system variables are correctly configured on HeatWave MySQL, as required by Oracle GoldenGate for MySQL.
+
+		<copy>SHOW VARIABLES LIKE ‘%bin%’;</copy>
+
 ## Task 3B: Using CloudShell to connect to the private network
 
 If you're working within the same Home region for OCI GoldenGate and MySQL Heatwave, then you can use CloudShell to connect to the private network.
@@ -190,6 +203,8 @@ If you're working within the same Home region for OCI GoldenGate and MySQL Heatw
 
 	Verify following binary log startup options and system variables are configured correctly on Heatwave MysQL required by Oracle GoldenGate for MySQL.
 
+		<copy>SHOW VARIABLES LIKE ‘%bin%’;</copy>
+
 	![Binary log startup options](./images/03b-4-binary-log.png " ")
 
 
@@ -206,8 +221,8 @@ If you're working within the same Home region for OCI GoldenGate and MySQL Heatw
 4. Create the ggadmin user using the following script. Ensure that you replace &lt;`ggadmin-password`&gt; with a valid password:
 
     ```
-    <copy>CREATE USER 'oggdmin' IDENTIFIED BY '<ggadmin-password>';
-	GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT, SHOW VIEW, CREATE, CREATE VIEW EVENT, INSERT, UPDATE, DROP,EXECUTE, DELETE ON *.* TO 'oggadmin';  </copy>
+    <copy>CREATE USER 'ggdmin' IDENTIFIED BY '<ggadmin-password>';
+	GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT, SHOW VIEW, CREATE, CREATE VIEW EVENT, INSERT, UPDATE, DROP,EXECUTE, DELETE ON *.* TO 'ggadmin';  </copy>
     ```
 
 5. Close Cloud Shell.
@@ -258,7 +273,10 @@ If you're working within the same Home region for OCI GoldenGate and MySQL Heatw
 		* max\_wal\_senders = 1  
 		* track\_commit\_timestamp = 1
 		* max\_wal\_size = 102400
-	* For **PostgreSQL extensions**, select **vector**.
+
+		> **Note:** To enable logical replication for the next lab, which is required to capture changes from PostgreSQL, ensure that the `wal_level` configuration in your PostgreSQL instance is set to `logical`.
+
+	* (Optional) For **PostgreSQL extensions**, select **vector**.
 
 	![Create configurations](./images/05-13-create-config-1.png " ")
 
